@@ -31,7 +31,7 @@ Follow these steps to set up and run the project:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/speech-to-text-rust.git
+   git clone https://github.com/dsddevs/speech-to-text-rust.git
    cd speech-to-text-rust
    ```
 
