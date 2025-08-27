@@ -1,4 +1,4 @@
-# Speech-to-Text Rust Project
+# Speech-to-Text Engine
 
 ## Overview
 This project is a command-line tool for converting speech from audio files into text using the Vosk speech recognition engine. It processes large audio files in efficient chunks, converting raw audio data from `u8` to `i16` slices and leveraging the Vosk library to perform the speech-to-text conversion. The recognized text is then saved to an output text file.
