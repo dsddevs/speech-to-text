@@ -1,92 +1,150 @@
-# Speech-to-Text Engine
+# Speech-to-Text Engine 🎙️
 
-## Overview
-This project is a command-line tool for converting speech from audio files into text using the Vosk speech recognition engine. It processes large audio files in efficient chunks, converting raw audio data from `u8` to `i16` slices and leveraging the Vosk library to perform the speech-to-text conversion. The recognized text is then saved to an output text file.
+[![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
+[![License](https://img.shields.io/badge/license-Apache2-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
-## Technology Stack
-- **Programming Language:** Rust
-- **Speech Recognition:** Vosk Speech Recognition API (via the [`vosk` crate](https://crates.io/crates/vosk))
-- **Core Dependencies:**
-    - Rust Standard Library: `std::error::Error`, `std::fs::File`, `std::io::{Read, Write}`, `std::path::Path`, `std::slice`, and `std::time::Instant`
-    - Vosk Model: Requires a pre-downloaded speech recognition model from [Vosk Models](https://alphacephei.com/vosk/models)
+A high-performance, enterprise-grade speech recognition system built in Rust, powered by the VOSK speech recognition toolkit. Convert audio files to text with exceptional accuracy and speed.
 
-## Dependencies
-- [Rust & Cargo](https://www.rust-lang.org/tools/install) (latest stable version recommended)
-- [Vosk Model Data](https://alphacephei.com/vosk/models) (download a model suitable for your language)
-- The [`vosk` Rust crate](https://crates.io/crates/vosk) (add this to your `Cargo.toml`):
-  ```toml
-  [dependencies]
-  vosk = "x.y.z"  # Replace x.y.z with the appropriate version
-  ```
+## 🚀 Key Features
 
-## Project Structure
-- **SpeechRecognizer Struct:**  
-  Contains methods for initializing the recognizer, processing audio files, and converting byte slices.
-    - `new(model_path: &str, sample_rate: f32)`: Constructor to initialize the recognizer with the path to the Vosk model and the audio sample rate.
-    - `recognize_audio_file(audio_file_path: &str)`: Reads the audio file in predefined chunks, converts each chunk for processing, and uses the Vosk API to recognize speech. The final text output is written to a file with a derived name.
-    - `as_i16_slice(buffer: &[u8])`: Converts a slice of bytes to a slice of 16-bit integers. This is used to prepare audio data for the recognition process.
+- **High Accuracy**: Leverages VOSK's state-of-the-art speech recognition models
+- **Fast Processing**: Optimized Rust implementation with efficient memory management
+- **Real-time Progress**: Live progress tracking during audio processing
+- **Multiple Formats**: Support for various audio file formats
+- **Cross-Platform**: Works on Windows and Linux systems
+- **Batch Processing**: Command-line interface for automated workflows
+- **Interactive Mode**: User-friendly interactive interface
+- **Robust Error Handling**: Comprehensive error management and validation
 
-## Setup Instructions
-Follow these steps to set up and run the project:
+## 🛠️ Technical Stack
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/dsddevs/speech-to-text-rust.git
-   cd speech-to-text-rust
-   ```
+- **Language**: Rust (Edition 2024)
+- **Speech Engine**: VOSK 0.3.1
+- **Audio Processing**: Custom high-performance audio processor
+- **Architecture**: Modular design with separated concerns
 
-2. **Install Rust and Cargo**
-   If you haven’t installed Rust already, follow the instructions on the [official Rust website](https://www.rust-lang.org/tools/install).
+## 📋 Prerequisites
 
-3. **Download the Vosk Model**
-    - Visit the [Vosk Models](https://alphacephei.com/vosk/models) page.
-    - Download a model that suits your language requirements.
-    - Extract the model to a directory on your machine.
+- Rust 1.70 or higher
+- VOSK model files (download from [VOSK Models](https://alphacephei.com/vosk/models))
 
-4. **Configure the Environment**
-   Set the environment variable for the model path or update the application configuration to point to your model:
-   ```bash
-   export VOSK_MODEL_PATH="/path/to/your/model"
-   ```
+## 🎙️Supported Audio Formats
 
-5. **Build the Project**
-   Use Cargo to build the project in release mode:
-   ```bash
-   cargo build --release
-   ```
+| Format | Sample Rate | Bit Depth | Channels |
+|--------|-------------|-----------|----------|
+| WAV    | 8-48 kHz    | 16-bit    | Mono/Stereo |
+| MP3    | 8-48 kHz    | Variable  | Mono/Stereo |
+| FLAC   | 8-192 kHz   | 16-24 bit | Mono/Stereo |
+| OGG    | 8-48 kHz    | Variable  | Mono/Stereo |
 
-6. **Run the Application**
-   Execute the application by providing an audio file as an argument:
-   ```bash
-   cargo run --release -- /path/to/audio.wav
-   ```
-   The tool will process the provided audio file and create a corresponding text file containing the recognized speech.
+## 🔧 Installation
 
-## Workflow and Processing Details
-- **File Processing:**  
-  The audio file is read in chunks (using a chunk size defined in the code), ensuring efficient memory usage. Each chunk is converted from `u8` data into `i16` slices for feeding into the recognizer.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/dsddevs/speech-to-text.git
+cd speech_to_text
+```
 
-- **Speech Recognition:**  
-  The Vosk recognizer handles the data in streaming mode, processing each chunk and collecting partial results. Once the processing is complete, it finalizes the recognition to produce the complete text output.
+### 2. Download VOSK Model
+Download a VOSK model suitable for your language:
+```bash
+# Example for English model
+wget https://alphacephei.com/vosk/models/vosk-model-en-us-0.22.zip
+unzip vosk-model-en-us-0.22.zip
+```
 
-- **Output Generation:**  
-  The final recognized text is saved to a text file whose name is derived from the original audio filename.
+### 3. Build the Project
+```bash
+cargo build --release
+```
 
-- **Logging and Performance:**  
-  The program logs processing progress and computes the total time taken for the conversion, providing insights into the performance of the tool.
+## 🎯 Usage
 
-## Error Handling
-- The application uses Rust's robust error handling (`Result` and `Box<dyn Error>`) to capture I/O errors, decoding issues, and other potential runtime problems.
-- In case of errors during file read/write operations or recognition processing, appropriate error messages will be displayed.
+### Command Line Mode
 
-## Future Enhancements
-- Improving error messages and adding more comprehensive exception handling.
-- Supporting real-time or streaming audio input.
-- Extending functionality to handle various audio formats more gracefully.
-- Adding configuration options for advanced tuning of the Vosk recognizer parameters.
+```bash
+# Variant 1
+cargo run -- <vosk-model path> <audio file path>
+```
 
-## Contributing
-Contributions are welcome! Please fork the repository, create a new branch for your changes, and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+```bash
 
-## License
-This project is licensed under the Apache License 2.0.
+# Variant 2
+cargo run
+Enter the path to the VOSK model: <vosk-model path> 
+Enter the path to the audio file: <audio file path>
+```
+## 📁 Project Structure
+
+```
+speech-to-text/
+├── src/
+│   ├── main.rs              # Entry point and CLI handling
+│   ├── audio_processor.rs   # Audio processing and chunking
+│   ├── speech_recognizer.rs # VOSK integration and recognition
+│   └── file_handler.rs      # Output file management
+├── models/                  # VOSK model storage
+├── audio/                   # Sample audio files
+├── output/                  # Generated transcriptions
+├── Cargo.toml               # Dependencies and metadata
+├── build.rs                 # Build configuration
+└── README.md                # This file
+```
+
+## 🔧 Configuration
+
+The system uses the following default settings:
+- **Sample Rate**: 16,000 Hz
+- **Chunk Size**: 16,384 bytes
+- **Max Alternatives**: 1
+- **Word-level timestamps**: Disabled for optimal performance
+
+## 📊 Performance
+
+- **Processing Speed**: Real-time or faster depending on hardware
+- **Memory Usage**: Optimized for large audio files
+- **Supported File Sizes**: No practical limit (streaming processing)
+- **Progress Tracking**: Real-time progress updates every 10 chunks
+
+## 🌍 Supported Languages
+
+Supports any language with available VOSK models:
+- English (US/UK)
+- Russian
+- German
+- French
+- Spanish
+- Chinese
+- And many more...
+
+## 🔍 Example Output
+
+```
+=== Speech recognition system ===
+The model is used: /models/vosk-model-en-us-0.22
+Processing audio file: /audio/meeting.wav
+Audio file size: 15728640 bytes
+PROGRESS: 10.0%
+PROGRESS: 20.0%
+...
+PROGRESS: 100.0%
+Successfully created text file: /audio/text_meeting.txt
+Recognition completed successfully!
+```
+
+## 📄 License
+This project is licensed under the Apache-2 License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contact
+telegram: @dsddevs
+
+## 🙏 Acknowledgments
+
+- [VOSK](https://alphacephei.com/vosk/) for the excellent speech recognition toolkit
+- Rust community for the amazing ecosystem
+- Contributors and testers
+
+---
+
+**Built Rust Projects by Davlatbek Rabbimov**
